@@ -19,9 +19,9 @@ export const Board: React.FunctionComponent<BoardProps> = ({
         // boardDiv = boardDiv.concat("<div className='board-row'>")
         while(j<3){
         const squareVal = (i*numRows) + j
-        boardDiv = boardDiv.concat(<Square
-        value={squareVal}
-        onClickHandler={() => onClick(squareVal)}/>)
+            boardDiv = boardDiv.concat(<Square
+                value={squareVal}
+                onClickHandler={() => onClick(squareVal)}/>)
         }
         // boardDiv.concat("</div>")
     };
