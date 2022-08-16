@@ -1,49 +1,42 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import {Board} from './components/Board.tsx';
+import { PlayerIcon } from './components/Player.tsx';
+import { useWinnerCalculationOnBoard } from './hooks/calculateWinner.ts';
 
 //TODO not sure why, but can't auto resolve tsx extension. fix this!
-function calculateWinner(squares) {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return "Winner: " + squares[a];
-      }
-    }
-    if (!squares.some((square)=>square === null)){
-        return "Tie!";
-    }
-    return null;
-  }
 
 
   
-
+/* 
   const startingState = {
     history: [{
         squares: Array(9).fill(null),
       }],
       stepNumber:0,
     xIsNext: true,}
-
-  class Game extends React.Component {
-    constructor(props) {
+ */
+  function Game() {
+/*     constructor(props) {
         super(props);
         this.state = startingState;
-      }
+      } */
 
-      handleClick(i){
+      // state variables: 
+      const [winner, calculateWinner] = useWinnerCalculationOnBoard();
+      const [boardTiles, setBoardTiles] = React.useState(Array(9).fill(null));
+      const [moveNumber, setMoveNumber] = React.useState(0) ;
+      const [history, setHistory] = React.useState([Array(9).fill(null)]);
+      const [startingPlayer, setStartingPlayer] = React.useState(PlayerIcon.X);
+      const [currentPlayer, setCurrentPlayer] = React.useState(PlayerIcon.X);
+
+      React.useEffect(() => {
+        calculateWinner(boardTiles)
+      }, [boardTiles, calculateWinner]);
+      console.log("board tiles:", boardTiles)
+
+      /*handleClick(i){
         const history = this.state.history.slice(0, 
             this.state.stepNumber + 1);
         const current = history[history.length - 1];
@@ -59,8 +52,96 @@ function calculateWinner(squares) {
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
         });
-    }
+    };
+*/
+      const handleClick = React.useCallback((boardIndex) => {
+        // add a new state history for the new move
+        // setHistory(history => [...history, ])
+        // if there's a winner, or there is already a value in the tile at boardIndex, then return
+        // can this be disabled using state?
+        console.log("click");
+        const currBoard = [...boardTiles]
+        if( winner|| currBoard[boardIndex]){
+          return;
+        }
+        // if the move is valid, then set it
+        currBoard[boardIndex] = currentPlayer.string
+        setBoardTiles(currBoard)
+        // add the current board to history
+        setHistory(history => [...history, [boardTiles]])
 
+        // if current player is X, set to O. else, set current player to X.
+        setCurrentPlayer(currentPlayer === PlayerIcon.X? PlayerIcon.O: PlayerIcon.X)
+        console.log(currBoard, boardTiles)
+      },
+      [boardTiles, currentPlayer, winner],
+      );
+
+      const jumpTo = useCallback((step) => {
+        setMoveNumber(step);
+        //if an even move, set current player to starting player. else, the non starting player
+        if (step % 2 === 0){
+          setCurrentPlayer(startingPlayer);
+        }
+        else{
+          setCurrentPlayer(startingPlayer === PlayerIcon.X? PlayerIcon.O: PlayerIcon.X)
+        }
+      },
+      [startingPlayer],
+      );
+
+      const newGame = useCallback(() => {
+        setHistory([Array(9).fill(null)]);
+        setBoardTiles(Array(9).fill(null));
+        // if next player is X, new nextplayer should be O, and vice versa
+        if(startingPlayer === PlayerIcon.X){
+          setStartingPlayer(PlayerIcon.O);
+          setCurrentPlayer(PlayerIcon.O);
+        }
+        else{
+          setStartingPlayer(PlayerIcon.X);
+          setCurrentPlayer(PlayerIcon.X); 
+        }
+        setMoveNumber(0);
+      },
+      [startingPlayer],
+      );
+
+      let status;
+      winner ? status = winner: status = 'Next player: ' + (currentPlayer === PlayerIcon.X? "O": "X");
+
+      // And now, the buttons...
+      const undoButton = <button onClick={() => 
+        this.state.stepNumber === 0 || winner?
+        null :
+        this.jumpTo(this.state.stepNumber - 1)}>
+            {"Undo"}</button>
+
+    const newGameButton = <button
+    onClick={newGame}>{
+        winner ? "New game" :
+        "Restart"
+    }</button>
+
+      return(
+        <div>
+        <><h1>Tic-Tac-Toe Practice</h1><div className="game">
+              <div className="game-board">
+                  <Board
+                      boardTiles={boardTiles}
+                      onClick={handleClick} />
+              </div>
+              <div className="game-info">
+                  <div>{status}</div>
+                  <div>{undoButton}</div>
+                  <div>{newGameButton}</div>
+              </div>
+          </div></>
+        </div>
+      );
+
+
+    /*   
         jumpTo(step){
             this.setState({
                 stepNumber: step,
@@ -70,15 +151,15 @@ function calculateWinner(squares) {
 
         newGame(){
             this.setState(startingState);
-        }
+        } */
 
-    render() {
+    /* render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
         let status;
         winner ? status = winner: status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
-        const moves = history.map((step, move) => {
+         const moves = history.map((step, move) => {
             const desc = move ?
               'Go to move #' + move :
               'Go to game start';
@@ -114,7 +195,7 @@ function calculateWinner(squares) {
               </div>
           </div></>
       );
-    }
+    } */
   }
   
   // ========================================

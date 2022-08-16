@@ -1,40 +1,41 @@
 import React from "react";
-import { WatchIgnorePlugin } from "webpack";
 import { Square } from "./Square.tsx";
 
 export type BoardProps = {
-    squares: Array<number>;
-    onClick: (number) => void;
+    boardTiles: any[];
+    onClick: (boardIndex: any) => void;
 };
 
 export const Board: React.FunctionComponent<BoardProps> = ({
-    squares,
+    boardTiles,
     onClick,
 }) => 
     {
-    var i,j=0;
-    var numRows=3;
-    let boardDiv: Array<any> = [];
-    while(i<3){
-        // boardDiv = boardDiv.concat("<div className='board-row'>")
-        while(j<3){
-        const squareVal = (i*numRows) + j
-            boardDiv = boardDiv.concat(<Square
-                value={squareVal}
-                onClickHandler={() => onClick(squareVal)}/>)
-        }
-        // boardDiv.concat("</div>")
-    };
+    console.log("board:", boardTiles)
+    console.log(onClick)
+    function renderSquare(squareIndex){
+        return(
+            <Square
+                value={boardTiles?.[squareIndex]}
+                onClick ={() => onClick(squareIndex)}
+            />)}
+    
     return(
         <div>
-            <div className='board-row'>
-            {boardDiv.slice(0,3)}
+            <div className='board-row'> 
+                {renderSquare(0)}
+                {renderSquare(1)}
+                {renderSquare(2)}
             </div>
             <div className='board-row'>
-            {boardDiv.slice(3,6)}
+                {renderSquare(3)}
+                {renderSquare(4)}
+                {renderSquare(5)}
             </div>
             <div className='board-row'>
-            {boardDiv.slice(6,9)}
+                {renderSquare(6)}
+                {renderSquare(7)}
+                {renderSquare(8)}
             </div>
         </div>
     )
