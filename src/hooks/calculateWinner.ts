@@ -1,6 +1,5 @@
 import React from "react";
 
-//todo change to hook? 
 export function useWinnerCalculationOnBoard(): [string, (squares: any) => void] {
     const [winner, setWinner] = React.useState("");
 
@@ -19,10 +18,14 @@ export function useWinnerCalculationOnBoard(): [string, (squares: any) => void] 
             const [a, b, c] = lines[i];
             if (squares?.[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
               setWinner("Winner: " + squares[a]);
+              return;
             }
           }
           if (squares && !squares.some((square)=>square === null)){
               setWinner("Tie!");
+          }
+          else{
+            setWinner("")
           }
       }, [])
         console.log(winner)

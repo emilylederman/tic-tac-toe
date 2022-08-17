@@ -18,7 +18,6 @@ export const Game: React.FunctionComponent<GameProps> = () => {
     
           React.useEffect(() => {
             calculateWinner(boardTiles)
-            return function cleanup(){calculateWinner(boardTiles)}
           }, [boardTiles, calculateWinner]);
           
           const handleClick = React.useCallback((boardIndex) => {
@@ -59,6 +58,7 @@ export const Game: React.FunctionComponent<GameProps> = () => {
           const newGame = useCallback(() => {
             setHistory([Array(9).fill(null)]);
             setBoardTiles(Array(9).fill(null));
+            calculateWinner(boardTiles)
             console.log("reset board tiles")
             // if next player is X, new nextplayer should be O, and vice versa
             if(startingPlayer === PlayerIcon.X){
@@ -71,13 +71,14 @@ export const Game: React.FunctionComponent<GameProps> = () => {
             }
             setMoveNumber(0);
           },
-          [startingPlayer],
+          [boardTiles, calculateWinner, startingPlayer],
           );
     
           let status;
           winner ? status = winner: status = 'Next player: ' + (currentPlayer === PlayerIcon.X? "X": "O");
     
           // And now, the buttons...
+          // TODO fix this
           const undoButton = <button onClick={() => 
             moveNumber === 0 || winner?
             null :
