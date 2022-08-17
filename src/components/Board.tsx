@@ -11,8 +11,6 @@ export const Board: React.FunctionComponent<BoardProps> = ({
     onClick,
 }) => 
     {
-    console.log("board:", boardTiles)
-    console.log(onClick)
     function renderSquare(squareIndex){
         return(
             <Square

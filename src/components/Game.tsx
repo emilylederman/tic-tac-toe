@@ -43,7 +43,6 @@ export const Game: React.FunctionComponent<GameProps> = () => {
     
             // if current player is X, set to O. else, set current player to X.
             setCurrentPlayer(currentPlayer === PlayerIcon.X? PlayerIcon.O: PlayerIcon.X)
-            console.log(currBoard, boardTiles)
           },
           [boardTiles, currentPlayer, winner],
           );
@@ -74,7 +73,6 @@ export const Game: React.FunctionComponent<GameProps> = () => {
               setCurrentPlayer(PlayerIcon.X); 
             }
             setMoveNumber(0);
-            calculateWinner(boardTiles)
           },
           [startingPlayer],
           );
