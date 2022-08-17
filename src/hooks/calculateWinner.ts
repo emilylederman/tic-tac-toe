@@ -1,7 +1,7 @@
 import React from "react";
 
 //todo change to hook? 
-export function useWinnerCalculationOnBoard(): (string | ((squares: any) => void))[] {
+export function useWinnerCalculationOnBoard(): [string, (squares: any) => void] {
     const [winner, setWinner] = React.useState("");
 
       const calculateWinner = React.useCallback(squares => {
@@ -25,7 +25,7 @@ export function useWinnerCalculationOnBoard(): (string | ((squares: any) => void
               setWinner("Tie!");
           }
       }, [])
-        console.log("Winner: " + winner)
+        console.log(winner)
       return [winner, calculateWinner];
     }
   

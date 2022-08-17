@@ -9,12 +9,11 @@ export const Square: React.FunctionComponent<SquareProps> = ({
     value,
     onClick
 }) => {
-    console.log(value)
     return (
 
         <button 
         className="square" 
-        onClick={() => onClick}
+        onClick={i => onClick(i)}
         >
         {value}
       </button> 
