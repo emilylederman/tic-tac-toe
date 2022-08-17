@@ -22,10 +22,8 @@ export const Game: React.FunctionComponent<GameProps> = () => {
           
           const handleClick = React.useCallback((boardIndex) => {
             // add a new state history for the new move
-            // setHistory(history => [...history, ])
             // if there's a winner, or there is already a value in the tile at boardIndex, then return
             // can this be disabled using state?
-            console.log("click");
             const currBoard = [...boardTiles]
             if( winner|| currBoard[boardIndex]){
               return;
@@ -58,8 +56,7 @@ export const Game: React.FunctionComponent<GameProps> = () => {
           const newGame = useCallback(() => {
             setHistory([Array(9).fill(null)]);
             setBoardTiles(Array(9).fill(null));
-            calculateWinner(boardTiles)
-            console.log("reset board tiles")
+            console.log("Starting new game...")
             // if next player is X, new nextplayer should be O, and vice versa
             if(startingPlayer === PlayerIcon.X){
               setStartingPlayer(PlayerIcon.O);
@@ -71,7 +68,7 @@ export const Game: React.FunctionComponent<GameProps> = () => {
             }
             setMoveNumber(0);
           },
-          [boardTiles, calculateWinner, startingPlayer],
+          [startingPlayer],
           );
     
           let status;
@@ -79,6 +76,8 @@ export const Game: React.FunctionComponent<GameProps> = () => {
     
           // And now, the buttons...
           // TODO fix this
+
+          // if there aren't any moves or someone has won, don't do anything
           const undoButton = <button onClick={() => 
             moveNumber === 0 || winner?
             null :
@@ -93,7 +92,7 @@ export const Game: React.FunctionComponent<GameProps> = () => {
     
           return(
             <div>
-            <><h1>Tic-Tac-Toe Practice</h1><div className="game">
+            <><h1>Tic-Tac-Toe</h1><div className="game">
                   <div className="game-board">
                       <Board
                           boardTiles={boardTiles}
@@ -101,7 +100,6 @@ export const Game: React.FunctionComponent<GameProps> = () => {
                   </div>
                   <div className="game-info">
                       <div>{status}</div>
-                      <div>{undoButton}</div>
                       <div>{newGameButton}</div>
                   </div>
               </div></>
