@@ -8,11 +8,6 @@ export type GameProps = {
 };
 
 export const Game: React.FunctionComponent<GameProps> = () => {
-    /*     constructor(props) {
-            super(props);
-            this.state = startingState;
-          } */
-    
           // state variables: 
           const [winner, calculateWinner] = useWinnerCalculationOnBoard();
           const [boardTiles, setBoardTiles] = React.useState(Array(9).fill(null));
@@ -23,6 +18,7 @@ export const Game: React.FunctionComponent<GameProps> = () => {
     
           React.useEffect(() => {
             calculateWinner(boardTiles)
+            return function cleanup(){calculateWinner(boardTiles)}
           }, [boardTiles, calculateWinner]);
           
           const handleClick = React.useCallback((boardIndex) => {
@@ -63,6 +59,7 @@ export const Game: React.FunctionComponent<GameProps> = () => {
           const newGame = useCallback(() => {
             setHistory([Array(9).fill(null)]);
             setBoardTiles(Array(9).fill(null));
+            console.log("reset board tiles")
             // if next player is X, new nextplayer should be O, and vice versa
             if(startingPlayer === PlayerIcon.X){
               setStartingPlayer(PlayerIcon.O);
@@ -78,7 +75,7 @@ export const Game: React.FunctionComponent<GameProps> = () => {
           );
     
           let status;
-          winner ? status = winner: status = 'Next player: ' + (currentPlayer === PlayerIcon.X? "O": "X");
+          winner ? status = winner: status = 'Next player: ' + (currentPlayer === PlayerIcon.X? "X": "O");
     
           // And now, the buttons...
           const undoButton = <button onClick={() => 
