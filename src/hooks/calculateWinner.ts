@@ -26,6 +26,9 @@ export function useWinnerCalculationOnBoard(): [string, (squares: any) => void] 
               setWinner("Tie!");
               console.log("It's a tie!");
           }
+
+          // when there is not a winner, explictly set the winner to empty
+          // 
           else{
             setWinner("")
           }
